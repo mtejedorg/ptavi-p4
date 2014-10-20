@@ -10,13 +10,13 @@ import sys
 # Cliente UDP simple.
 
 # Dirección IP del servidor.
-com = sys.arg
-if len(com) = 3:
-    SERVER = com(1)
-    PORT = com(2)
+com = sys.argv
+if len(com) == 4:
+    SERVER = com[1]
+    PORT = int(com[2])
 
     # Contenido que vamos a enviar
-    LINE = com(3)
+    LINE = com[3]
 
     # Creamos el socket, lo configuramos y lo atamos a un servidor/puerto
     my_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
