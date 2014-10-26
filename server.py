@@ -28,8 +28,16 @@ class SIPRegisterHandler(SocketServer.DatagramRequestHandler):
             #Guarda la información registrada y la IP en un diccionario
             if lista[0] == "REGISTER":
                 usuario = lista[1][4:]
-                self.dicc[usuario] = IP
-                self.wfile.write("SIP/2.0 200 OK\r\n\r\n")
+                expires = int(lista[4])
+                if expires == 0:
+                    self.wfile.write("SIP/2.0 200 OK\r\n\r\n")
+                    if usuario in self.dicc:
+                        del self.dicc[usuario]
+                        #print self.dicc[usuario]
+                if expires > 0:
+                    self.dicc[usuario] = [IP, expires]
+                    self.wfile.write("SIP/2.0 200 OK\r\n\r\n")
+                    #print self.dicc[usuario]
 
             else:
                 pass
