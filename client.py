@@ -30,7 +30,7 @@ my_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 my_socket.connect((SERVER, PORT))
 
 print "Enviando: " + LINE
-my_socket.send(LINE)
+my_socket.send(LINE + "\r\n")
 data = my_socket.recv(1024)
 
 print 'Recibido -- ', data
