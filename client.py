@@ -14,7 +14,6 @@ coms = sys.argv
 if len(coms) == 6:
     SERVER = coms[1]
     PORT = int(coms[2])
-    
     LINE = ""
     if coms[3] == "register":
         LINE = "REGISTER sip:" + coms[4] + " SIP/2.0\r\n"
@@ -39,7 +38,3 @@ print "Terminando socket..."
 # Cerramos todo
 my_socket.close()
 print "Fin."
-
-
-
-       

@@ -11,17 +11,19 @@ import time
 
 clients = {}
 
+
 class SIPRegisterHandler(SocketServer.DatagramRequestHandler):
     """
     SIP Register server class
-    
+
     Métodos (más detallados en el propio método:
         register2file: crea un archivo con los clientes
         register: se encarga de procesar los mensajes register
     """
     def register2file(self):
         """
-        Imprime la lista de clientes en el archivo 'registered.txt', con el formato:
+        Imprime la lista de clientes en el archivo 'registered.txt',
+        con el formato:
 
         User \t IP \t Expires
         luke@polismassa.com \t localhost \t 2013-10-23 10:37:12
@@ -41,7 +43,7 @@ class SIPRegisterHandler(SocketServer.DatagramRequestHandler):
 
     def register(self, line):
         """
-        Si es un mensaje register, agrega al cliente en cuestión 
+        Si es un mensaje register, agrega al cliente en cuestión
         a la variable global 'clients', informando por pantalla
         de cada paso.
         Guarda cada cliente como un diccionario del tipo
@@ -78,13 +80,12 @@ class SIPRegisterHandler(SocketServer.DatagramRequestHandler):
 
     def update(self):
         """ Actualiza la lista de clientes a la hora actual"""
-        lista_tmp = [] #Para guardar qué clientes (key) debemos borrar
+        lista_tmp = []  # Para guardar qué clientes (key) debemos borrar
         for client in clients:
             if clients[client]["time"] < time.time():
                 lista_tmp.append(client)
         for client in lista_tmp:
             del clients[client]
-
 
     def handle(self):
         """
@@ -107,12 +108,12 @@ class SIPRegisterHandler(SocketServer.DatagramRequestHandler):
             self.register2file()
 
             print "\r\n\r\n>> A la espera de nuevos clientes...\r\n\r\n"
-            
+
 if __name__ == "__main__":
     # Creamos servidor de register y escuchamos
     if len(sys.argv) == 2:
-        serv = SocketServer.UDPServer(("", int(sys.argv[1])), SIPRegisterHandler)
+        s = SocketServer.UDPServer(("", int(sys.argv[1])), SIPRegisterHandler)
         print "Lanzando servidor UDP de SIP Register...\r\n\r\n"
-        serv.serve_forever()
+        s.serve_forever()
     else:
         print "Usage: $python server.py <port>"
