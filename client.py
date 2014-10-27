@@ -11,19 +11,17 @@ import sys
 
 # Dirección IP del servidor.
 coms = sys.argv
-try:
+if len(coms) == 6:
     SERVER = coms[1]
     PORT = int(coms[2])
+    
+    LINE = ""
+    if coms[3] == "register":
+        LINE = "REGISTER sip:" + coms[4] + " SIP/2.0\r\n"
+        LINE += "Expires: " + coms[5] + "\r\n"
 
-    if coms[3] != "register":
-        # Contenido que vamos a enviar
-        LINE = ""
-        for com in coms[3:]:
-            LINE += com + " "
-    else:
-        LINE = "REGISTER sip:" + coms[4] + "SIP/1.0\r\n\r\n"
-except IndexError:
-    print "Usage: $python client.py <ip> <puerto> <linea>"
+else:
+    print "Usage: client.py ip puerto register sip_address expires_value"
     sys.exit()
 
 # Creamos el socket, lo configuramos y lo atamos a un servidor/puerto
