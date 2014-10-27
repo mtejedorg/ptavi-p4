@@ -18,18 +18,20 @@ class SIPRegisterHandler(SocketServer.DatagramRequestHandler):
     def handle(self):
         print "Dirección del cliente: ",
         print self.client_address
-        self.wfile.write("Hemos recibido tu peticion")
+        Data = "Hemos recibido tu peticion"
         while 1:
             # Leyendo línea a línea lo que nos envía el cliente
             line = self.rfile.read()
             palabras = line.split(" ")
-            if palabras[0] == "REGISTRAR":
-                print "Recibido cliente nuevo"
-                clients.append([palabras[1], self.client_address])
-                print "Cliente agregado"
-                self.wfile.write("Bienvenido!!!")
+            if palabras[0] == "REGISTER":
+                print "Registrando cliente nuevo..."
+                clients[palabras[1]] = self.client_address[0]
+                print "...cliente agregado: ",
+                print self.client_address
+                Data += "\r\nSIP/1.0 200 OK\r\n\r\n    Bienvenido!!!"
             else:
-                print "El cliente nos manda " + line
+                print "Un cliente nos manda " + line
+                self.wfile.write(Data)
             if not line:
                 break
 
@@ -37,7 +39,7 @@ if __name__ == "__main__":
     # Creamos servidor de eco y escuchamos
     if len(sys.argv) == 2:
         serv = SocketServer.UDPServer(("", int(sys.argv[1])), SIPRegisterHandler)
-        print "Lanzando servidor UDP de eco..."
+        print "Lanzando servidor UDP de SIP Register..."
         serv.serve_forever()
     else:
         print "Usage: $python server.py <port>"
