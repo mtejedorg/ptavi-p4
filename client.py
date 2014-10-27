@@ -20,7 +20,7 @@ try:
     for com in coms[3:]:
         LINE += com + " "
 except IndexError:
-    print "Usage: $python client.py ip puerto linea"
+    print "Usage: $python client.py <ip> <puerto> <linea>"
     sys.exit()
 
 # Creamos el socket, lo configuramos y lo atamos a un servidor/puerto
