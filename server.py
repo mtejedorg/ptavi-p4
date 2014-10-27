@@ -13,13 +13,22 @@ clients = {}
 
 class SIPRegisterHandler(SocketServer.DatagramRequestHandler):
     """
-    SIP server class
-    """
+    SIP Register server class
     
+    Métodos (más detallados en el propio método:
+        register2file: crea un archivo con los clientes
+        register: se encarga de procesar los mensajes register
+    """
     def register2file(self):
+        """
+        Imprime la lista de clientes en el archivo 'registered.txt', con el formato:
+
+        User \t IP \t Expires
+        luke@polismassa.com \t localhost \t 2013-10-23 10:37:12
+        papa@darthwader.com \t localhost \t 2013-10-23 10:21:15
+        """
         fich = open("registered.txt", 'w')
         info = "User \t IP \t Expires\r\n"
-        print clients
         for client in clients:
             info += client + " \t "
             info += clients[client]["IP"] + " \t "
@@ -27,15 +36,27 @@ class SIPRegisterHandler(SocketServer.DatagramRequestHandler):
             str_time = time.strftime('%Y-%m-%d %H:%M:%S', tiempo)
             info += str_time + " \t "
             info += "\r\n"
-        print info
         fich.write(info)
         fich.close()
 
     def register(self, line):
+        """
+        Si es un mensaje register, agrega al cliente en cuestión 
+        a la variable global 'clients', informando por pantalla
+        de cada paso.
+        Guarda cada cliente como un diccionario del tipo
+        Cliente:
+            Nombre, un string generalmente de la forma nombre@dominio.com
+            Valores:
+                IP, un string con la IP del cliente
+                time: segundo desde el 1 de enero de 1979 en el
+                cual expirará
+        """
         lineas = line.split("\r\n")
         palabras = lineas[0].split(" ") + lineas[1].split(" ")
         if palabras[0] == "REGISTER":
             cliente = palabras[1][4:]
+            #prot_ver es una lista que incluye portocolo y versión
             prot_ver = palabras[2].split("/")
             Data = prot_ver[0] + "/" + prot_ver[1] + " 200 OK\r\n\r\n"
             expires = int(palabras[4])
@@ -47,7 +68,6 @@ class SIPRegisterHandler(SocketServer.DatagramRequestHandler):
             print "...cliente agregado: ",
             print cliente + ": ",
             print valor
-            print clients
 
             if expires == 0:
                 print "El tiempo de expiración es 0.",
@@ -57,7 +77,8 @@ class SIPRegisterHandler(SocketServer.DatagramRequestHandler):
             self.wfile.write(Data)
 
     def update(self):
-        lista_tmp = []
+        """ Actualiza la lista de clientes a la hora actual"""
+        lista_tmp = [] #Para guardar qué clientes (key) debemos borrar
         for client in clients:
             if clients[client]["time"] < time.time():
                 lista_tmp.append(client)
@@ -66,6 +87,10 @@ class SIPRegisterHandler(SocketServer.DatagramRequestHandler):
 
 
     def handle(self):
+        """
+        Entra en un bucle infinito a la espera de mensajes de clientes.
+        Cuando llega un mensaje llama a los procesos correspondientes
+        """
         print "Dirección del cliente: ",
         print self.client_address
         while 1:
