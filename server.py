@@ -85,7 +85,9 @@ class SIPRegisterHandler(SocketServer.DatagramRequestHandler):
             if clients[client]["time"] < time.time():
                 lista_tmp.append(client)
         for client in lista_tmp:
+            print "\r\n>> Lista de clientes actualizada:",
             del clients[client]
+            print "El cliente '" + client + "' ha sido borrado (su sesión ha expirado)"
 
     def handle(self):
         """
