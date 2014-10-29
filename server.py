@@ -65,7 +65,6 @@ class SIPRegisterHandler(SocketServer.DatagramRequestHandler):
             #Si un usuario se da de baja y esta en el registro, le borramos
                 if line[1][1] in registro:
                     del registro[line[1][1]]
-                    self.wfile.write(" SIP2.0 200 OK\r\n\r\n")
             #Borro usuarios caducados y escribimos en el fichero
             self.borrar_caducados(registro)
             self.register2file()
