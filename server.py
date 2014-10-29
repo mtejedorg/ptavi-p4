@@ -57,7 +57,7 @@ class SIPRegisterHandler(SocketServer.DatagramRequestHandler):
                     if usuario in self.dicc:
                         del self.dicc[usuario]
                         register2file()
-                if expires > 0:
+                elif expires > 0:
                     self.dicc[usuario] = [IP, expires]
                     self.wfile.write("SIP/2.0 200 OK\r\n\r\n")
                     register2file()
